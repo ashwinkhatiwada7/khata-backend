@@ -9,6 +9,7 @@ import { customers } from "../../db/schema";
 import { eq, and, or, ilike, count, desc } from "drizzle-orm";
 import { AppError } from "../common/AppError";
 import { parsePage, parsePerPage } from "../../utils/pagination";
+import { findActiveCustomer } from "./customer.repository";
 export const CustomerService = {
   async createCustomer(data: createCustomerDTO, shopOwnerId: string) {
     const isExisting = await db
@@ -81,20 +82,9 @@ export const CustomerService = {
   },
 
   async deleteCustomer(shopOwnerId: string, customerId: string) {
-    const [isExisting] = await db
-      .select({
-        id: customers.id,
-      })
-      .from(customers)
-      .where(
-        and(
-          eq(customers.shopOwnerId, shopOwnerId),
-          eq(customers.id, customerId),
-        ),
-      )
-      .limit(1);
+    const customer = await findActiveCustomer(shopOwnerId, customerId);
 
-    if (!isExisting) {
+    if (!customer) {
       throw new AppError("Customer didnot exists", 404);
     }
 
@@ -116,20 +106,9 @@ export const CustomerService = {
     customerId: string,
     shopOwnerId: string,
   ) {
-    const [isExisting] = await db
-      .select({
-        id: customers.id,
-      })
-      .from(customers)
-      .where(
-        and(
-          eq(customers.shopOwnerId, shopOwnerId),
-          eq(customers.id, customerId),
-        ),
-      )
-      .limit(1);
+    const customer = await findActiveCustomer(shopOwnerId, customerId);
 
-    if (!isExisting) {
+    if (!customer) {
       throw new AppError("Customer didnot exists", 404);
     }
 
@@ -146,12 +125,11 @@ export const CustomerService = {
         .where(
           and(
             eq(customers.shopOwnerId, shopOwnerId),
-
             eq(customers.phone, data.phone),
           ),
         )
         .limit(1);
-      if (isPhoneNoUsed[0].id) {
+      if (isPhoneNoUsed.length > 0) {
         throw new AppError("This phone number is already used", 409);
       }
     }
@@ -171,5 +149,22 @@ export const CustomerService = {
           eq(customers.shopOwnerId, shopOwnerId),
         ),
       );
+  },
+
+  async getCustomerById(shopOwnerId: string, customerId: string) {
+    const customerInfo = await db
+      .select()
+      .from(customers)
+      .where(
+        and(
+          eq(customers.id, customerId),
+          eq(customers.shopOwnerId, shopOwnerId),
+          eq(customers.isActive, true),
+        ),
+      );
+
+    return {
+      customerInfo,
+    };
   },
 };

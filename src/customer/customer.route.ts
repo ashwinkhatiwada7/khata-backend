@@ -18,6 +18,13 @@ customerRouter.post(
 );
 customerRouter.get("/", Authenticate, CustomerController.getAllCustomer);
 
+customerRouter.get(
+  "/:id",
+  Authenticate,
+  Validate(customerParamsIdSchema, "params"),
+  CustomerController.getCustomerById,
+);
+
 customerRouter.delete(
   "/:id",
   Authenticate,

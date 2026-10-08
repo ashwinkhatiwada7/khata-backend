@@ -53,8 +53,23 @@ export const CustomerController = {
     }
   },
   async getCustomerById(req: Request, res: Response, next: NextFunction) {
+    const shopOwnerId = req.user?.id;
+    const customerId = req.params?.id as string;
+    if (!shopOwnerId) {
+      throw new AppError("UNAUTHORIZED", 401);
+    }
     try {
-    } catch (error) {}
+      const result = await CustomerService.getCustomerById(
+        shopOwnerId,
+        customerId,
+      );
+      return res.status(200).json({
+        success: true,
+        data: result.customerInfo,
+      });
+    } catch (error) {
+      next(error);
+    }
   },
   async updateCustomer(req: Request, res: Response, next: NextFunction) {
     try {

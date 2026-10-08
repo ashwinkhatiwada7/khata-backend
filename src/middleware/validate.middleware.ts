@@ -13,7 +13,7 @@ export const Validate = (
 
       if (!parsed.success) {
         const { fieldErrors } = z.flattenError(parsed.error);
-        const validationError = new AppError("Invalid Data", 401, fieldErrors);
+        const validationError = new AppError("Invalid Data", 402, fieldErrors);
         return next(validationError);
       }
 
