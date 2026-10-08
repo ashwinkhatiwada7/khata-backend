@@ -1,0 +1,94 @@
+import z from "zod";
+import { TypeOf } from "zod/v3";
+
+//1.Create Customer
+export const createCustomerSchema = z.object({
+  name: z
+    .string()
+    .trim()
+    .min(4, "Minimum 4 characters")
+    .max(60, "Maximum 60 characters"),
+  address: z
+    .string()
+    .trim()
+    .min(4, "Minimum 4 character")
+    .max(60, "Maximum 60 character"),
+  creditLimit: z
+    .string()
+    .regex(
+      /^\d+(\.\d{1,2})?$/,
+      "Credit limit must be a valid number with up to 2 decimal places",
+    )
+    .refine((val) => parseFloat(val) >= 0, {
+      message: "Credit limit must be non-negative",
+    })
+    .refine((val) => parseFloat(val) <= 999999999.99, {
+      message: "Credit limit exceeds maximum allowed value",
+    }),
+  creditBalance: z
+    .string()
+    .regex(
+      /^\d+(\.\d{1,2})?$/,
+      "Credit limit must be a valid number with up to 2 decimal places",
+    )
+    .refine((val) => parseFloat(val) >= 0, {
+      message: "Credit limit must be non-negative",
+    })
+    .refine((val) => parseFloat(val) <= 999999999.99, {
+      message: "Credit limit exceeds maximum allowed value",
+    }),
+  isActive: z.boolean("is_active").default(true),
+  image: z.string().trim().optional(),
+  phone: z.string().regex(/^\d{10}$/, "Phone must be of 10 digits"),
+});
+
+export type createCustomerDTO = z.infer<typeof createCustomerSchema>;
+
+//2. Get Custoemr
+export type getAllCustomerType = {
+  search?: string;
+  page?: string;
+  perpage?: string;
+  // shopOwnerId: string;
+};
+
+export const customerParamsIdSchema = z.object({
+  id: z.uuid("Invalid Customer Id"),
+});
+
+//3, Update Customer
+export const updateCustomerSchema = z.object({
+  name: z
+    .string()
+    .trim()
+    .min(4, "Minimum 4 characters")
+    .max(60, "Maximum 60 characters")
+    .optional(),
+  address: z
+    .string()
+    .trim()
+    .min(4, "Minimum 4 character")
+    .max(60, "Maximum 60 character")
+    .optional(),
+
+  creditLimit: z
+    .string()
+    .regex(
+      /^\d+(\.\d{1,2})?$/,
+      "Credit limit must be a valid number with up to 2 decimal places",
+    )
+    .refine((val) => parseFloat(val) >= 0, {
+      message: "Credit limit must be non-negative",
+    })
+    .refine((val) => parseFloat(val) <= 999999999.99, {
+      message: "Credit limit exceeds maximum allowed value",
+    })
+    .optional(),
+  image: z.string().trim().optional().optional(),
+  phone: z
+    .string()
+    .regex(/^\d{10}$/, "Phone must be of 10 digits")
+    .optional(),
+});
+
+export type updateCustomerDTO = z.infer<typeof updateCustomerSchema>;
