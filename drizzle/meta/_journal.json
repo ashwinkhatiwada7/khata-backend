@@ -22,6 +22,20 @@
       "when": 1791354483758,
       "tag": "0002_rapid_corsair",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1791542898888,
+      "tag": "0003_large_brother_voodoo",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1791543080809,
+      "tag": "0004_empty_black_cat",
+      "breakpoints": true
     }
   ]
 }

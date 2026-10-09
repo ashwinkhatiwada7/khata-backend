@@ -23,7 +23,7 @@ export const credits = pgTable(
         onUpdate: "cascade",
       }),
     customerId: uuid("customer_id").notNull(),
-    totalAmount: numeric({ precision: 12, scale: 2 }).notNull(),
+    totalAmount: numeric({ precision: 10, scale: 2 }).notNull(),
     entryDate: date("entry_date").notNull(),
     description: text(),
     createdAt: timestamp("created_at").defaultNow().notNull(),
@@ -54,8 +54,8 @@ export const creditItems = pgTable(
       }),
     itemName: varchar("item_name", { length: 150 }).notNull(),
     quantity: numeric({ precision: 10, scale: 2 }),
-    unitPrice: numeric("unit_price", { precision: 12, scale: 2 }),
-    amount: numeric({ precision: 12, scale: 2 }).notNull(),
+    unitPrice: numeric("unit_price", { precision: 10, scale: 2 }),
+    amount: numeric({ precision: 10, scale: 2 }).notNull(),
     note: text(),
     createdAt: timestamp("created_at", { mode: "string" })
       .defaultNow()

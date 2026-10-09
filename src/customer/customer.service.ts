@@ -109,7 +109,7 @@ export const CustomerService = {
     const customer = await findActiveCustomer(shopOwnerId, customerId);
 
     if (!customer) {
-      throw new AppError("Customer didnot exists", 404);
+      throw new AppError("Customer doesnot exists", 404);
     }
 
     if (Object.keys(data).length === 0) {
